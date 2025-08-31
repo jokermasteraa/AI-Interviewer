@@ -1,0 +1,44 @@
+server:
+  tomcat:
+    uri-encoding: UTF-8
+    max-swallow-size: -1    #不限制请求体的大小
+
+spring:
+  profiles:
+    active: dev   #dev开发环境 prod生产环境 test测试环境
+  servlet:
+    multipart:
+      max-file-size: 10MB    #文件上传的大小限制
+      max-request-size: 10MB   #文件最大请求限制，可用于批量上传
+
+#日志级别
+logging:
+  level:
+    root: info
+
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: assign_id
+      banner: false
+      update-strategy: not_empty
+  mapper-locations: classpath*:/mapper/*.xml
+
+# 分页插件助手的配置
+pagehelper:
+  helper-dialect: MYSQL
+  support-methods-arguments: true
+
+axle:
+  frontend:
+    domain: http://127.0.0.1:5500
+
+
+minio:
+  endpoint: http://127.0.0.1:9000 # 这是MinIO服务器的地址和端口
+  fileHost: http://192.168.0.101:9000  # 如果你需要一个公共URL来访问上传的文件，可以在这里设置  (内网地址)
+  bucketName: ai-interviewer # 你的MinIO存储桶名称
+  accessKey: PxPjLOW41h5WYFPYvcU3 # MinIO的访问密钥
+  secretKey: aPJCoRGW6cU8mqH1kAAbGz8UnspA4TPqW0v14yxi # MinIO的秘密密钥
