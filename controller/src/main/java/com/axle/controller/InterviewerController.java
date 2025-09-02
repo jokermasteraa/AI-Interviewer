@@ -1,7 +1,7 @@
 package com.axle.controller;
 
 import com.axle.graceresult.GraceJSONResult;
-import com.axle.pojo.bo.Interviewerbo;
+import com.axle.bo.Interviewerbo;
 import com.axle.service.InterviewerService;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;

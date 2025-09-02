@@ -1,7 +1,7 @@
 package com.axle.service;
 
 import com.axle.pojo.Interviewer;
-import com.axle.pojo.bo.Interviewerbo;
+import com.axle.bo.Interviewerbo;
 
 import java.util.List;
 

@@ -2,14 +2,12 @@ package com.axle.service.Impl;
 
 import com.axle.mapper.InterviewerMapper;
 import com.axle.pojo.Interviewer;
-import com.axle.pojo.bo.Interviewerbo;
+import com.axle.bo.Interviewerbo;
 import com.axle.service.InterviewerService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import jakarta.annotation.Resource;
-import jakarta.annotation.Resources;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

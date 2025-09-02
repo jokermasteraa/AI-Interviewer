@@ -1,4 +1,4 @@
-package com.axle.pojo.bo;
+package com.axle.bo;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;

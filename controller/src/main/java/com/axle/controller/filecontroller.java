@@ -31,13 +31,37 @@ public class filecontroller {
             return GraceJSONResult.errorCustom(ResponseStatusEnum.FILE_UPLOAD_FAILD);
         }
         //重新命名
-        String fileName = dealWithoutFilename(originalFilename);
+        String fileName = "interviewer"+dealWithoutFilename(originalFilename);
         //文件上传
         String imageUrl = MinIOUtils.uploadFile(minioConfig.getBucketName(),
                 fileName,
                 file.getInputStream(),
                 true);
         return GraceJSONResult.ok(imageUrl);
+    }
+
+    /**
+     * 上传视频
+     * @param file
+     * @return
+     * @throws Exception
+     */
+    @PostMapping("/uploadInterviewVideo")
+    public GraceJSONResult uploadInterviewVideo(@RequestParam("file") MultipartFile file) throws Exception {
+        //获取原始文件名
+        String originalFilename = file.getOriginalFilename();
+        if(StringUtils.isBlank(originalFilename)){
+            //为空返回错误信息
+            return GraceJSONResult.errorCustom(ResponseStatusEnum.FILE_UPLOAD_FAILD);
+        }
+        //重新命名
+        String fileName =  "interviewerVideo"+dealWithoutFilename(originalFilename);
+        //文件上传
+        String videoUrl = MinIOUtils.uploadFile(minioConfig.getBucketName(),
+                fileName,
+                file.getInputStream(),
+                true);
+        return GraceJSONResult.ok(videoUrl);
     }
 
     private String dealWithFilename(String originalFilename){
