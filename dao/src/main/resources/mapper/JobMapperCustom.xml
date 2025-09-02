@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.axle.mapper.JobMapperCustom">
+
+    <select id="queryAllJobList" parameterType="map" resultType="com.axle.vo.JobVO">
+        SELECT
+            j.id as jobId,
+            j.job_name as JobName,
+            j.job_desc as jobDesc,
+            j.status as status,
+            j.interviewer_id as interviewerId,
+            j.prompt as prompt,
+            i.ai_name as interviewerName,
+            j.create_time as createTime,
+            j.updated_time as updateTime
+        FROM job j
+            left join interviewer i
+            on j.interviewer_id = i.id
+        order by j.updated_time desc
+    </select>
+
+</mapper>

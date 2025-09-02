@@ -11,4 +11,6 @@ public interface QuestionLibService {
     public  void showOrHide(String questionLibId, Integer isOn);
 
     void deleteById(String questionLibId);
+
+    boolean isQustionContainInterviewer(String questionId);
 }

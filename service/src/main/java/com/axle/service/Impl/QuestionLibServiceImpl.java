@@ -5,11 +5,13 @@ import com.axle.base.BaseInfoProperties;
 import com.axle.enums.YesOrNo;
 import com.axle.mapper.QuestionLibCustomMapper;
 import com.axle.mapper.QuestionLibMapper;
+import com.axle.pojo.Interviewer;
 import com.axle.pojo.QuestionLib;
 import com.axle.bo.QuestionLibBO;
 import com.axle.vo.QuestionLibVO;
 import com.axle.service.QuestionLibService;
 import com.axle.utils.PagedGridResult;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.PageHelper;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
@@ -70,5 +72,16 @@ public class QuestionLibServiceImpl extends BaseInfoProperties implements Questi
         QuestionLib questionLib = new QuestionLib();
         questionLib.setId(questionLibId);
         questionLibMapper.deleteById(questionLib);
+    }
+
+    @Override
+    public boolean isQustionContainInterviewer(String interviewerId) {
+        QueryWrapper<QuestionLib> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("interviewer_id", interviewerId);
+        Long count = questionLibMapper.selectCount(queryWrapper);
+        if( count > 0){
+            return true;
+        }
+        return false;
     }
 }
