@@ -1,9 +1,15 @@
 package com.axle.service.Impl;
 
+import com.axle.exception.GraceException;
+import com.axle.graceresult.ResponseStatusEnum;
 import com.axle.mapper.InterviewerMapper;
+import com.axle.mapper.JobMapper;
+import com.axle.mapper.QuestionLibMapper;
 import com.axle.pojo.Interviewer;
 import com.axle.bo.Interviewerbo;
 import com.axle.service.InterviewerService;
+import com.axle.service.JobService;
+import com.axle.service.QuestionLibService;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import jakarta.annotation.Resource;
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +24,11 @@ public class InterviewerServiceImpl implements InterviewerService {
 
     @Resource
     private InterviewerMapper interviewerMapper;
+
+    @Resource
+    private JobService jobService;
+    @Resource
+    private QuestionLibService questionLibService;
 
     @Override
     public void createOrUpdate(Interviewerbo interviewerbo) {
@@ -40,6 +51,11 @@ public class InterviewerServiceImpl implements InterviewerService {
     @Override
     public void deleteById(String InterviewerId) {
         //TODO 因为面试官与职位绑定，并且面试官下面还有许多题库，如果有，就不能被删除（多表关联需要删除关联的数据）
+        boolean isJob = jobService.isJobContainInterviewer(InterviewerId);
+        boolean isQuestion = questionLibService.isQustionContainInterviewer(InterviewerId);
+        if(isJob || isQuestion){
+            GraceException.display(ResponseStatusEnum.CAN_NOT_DELETE_INTERVIEWER);
+        }
         interviewerMapper.deleteById(InterviewerId);
     }
 
