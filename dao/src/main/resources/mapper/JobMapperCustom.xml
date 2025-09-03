@@ -5,14 +5,12 @@
     <select id="queryAllJobList" parameterType="map" resultType="com.axle.vo.JobVO">
         SELECT
             j.id as jobId,
-            j.job_name as jobName,
             j.job_desc as jobDesc,
             j.status as status,
             j.interviewer_id as interviewerId,
             j.prompt as prompt,
             i.ai_name as interviewerName,
             j.create_time as createTime,
-            j.updated_time as updatedTime
         FROM job j
             left join interviewer i
             on j.interviewer_id = i.id
