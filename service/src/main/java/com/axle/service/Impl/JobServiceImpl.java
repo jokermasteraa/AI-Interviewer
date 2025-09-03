@@ -69,4 +69,10 @@ public class JobServiceImpl extends BaseInfoProperties implements JobService {
         }
         return false;
     }
+
+    @Override
+    public List<HashMap<String,Object>> querynameList() {
+        List<HashMap<String,Object>> map =jobMapperCustom.queryNameList(new HashMap<>());
+        return map;
+    }
 }

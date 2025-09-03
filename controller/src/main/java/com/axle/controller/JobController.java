@@ -42,5 +42,10 @@ public class JobController {
         return GraceJSONResult.ok();
     }
 
+    @GetMapping("/nameList")
+    public GraceJSONResult nameList(){
+        return GraceJSONResult.ok(jobService.querynameList());
+    }
+
 
 }

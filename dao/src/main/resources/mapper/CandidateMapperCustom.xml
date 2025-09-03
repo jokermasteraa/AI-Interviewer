@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.axle.mapper.CandidateMapperCustom">
+
+    <select id="queryAllcandidate" parameterType="map" resultType="com.axle.vo.CandidateVO">
+        SELECT
+            c.id as candidateId,
+            c.real_name as realName,
+            c.identity_num as identityNum,
+            c.mobile as mobile,
+            c.sex as sex,
+            c.email as email,
+            c.birthday as birthday,
+            j.id as jobId,
+            j.job_name as jobName,
+            c.created_time as createTime
+        FROM candidate c
+            left join job j
+            on c.job_id = j.id
+        where 1=1
+        <if test="ParamMap.realName != null and ParamMap.realName !=''">
+            and c.real_name like concat('%',#{ParamMap.realName},'%')
+        </if>
+        <if test="ParamMap.mobile != null and ParamMap.mobile !=''">
+            and c.mobile like concat('%',#{ParamMap.mobile},'%')
+        </if>
+    </select>
+
+</mapper>
