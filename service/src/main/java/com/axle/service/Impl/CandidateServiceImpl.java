@@ -3,12 +3,16 @@ package com.axle.service.Impl;
 
 import com.axle.base.BaseInfoProperties;
 import com.axle.bo.CandidateBO;
+import com.axle.graceresult.GraceJSONResult;
+import com.axle.graceresult.ResponseStatusEnum;
 import com.axle.mapper.CandidateMapper;
 import com.axle.mapper.CandidateMapperCustom;
 import com.axle.pojo.Candidate;
+import com.axle.pojo.QuestionLib;
 import com.axle.service.CandidateService;
 import com.axle.utils.PagedGridResult;
 import com.axle.vo.CandidateVO;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import io.micrometer.common.util.StringUtils;
@@ -61,6 +65,12 @@ public class CandidateServiceImpl extends BaseInfoProperties implements Candidat
     public void deleteById(String candidateId) {
         candidateMapper.deleteById(candidateId);
     }
+
+    @Override
+    public Candidate queryByPhone(String mobile) {
+        return candidateMapper.selectOne(new QueryWrapper<Candidate>().eq("mobile",mobile));
+    }
+
 
 
 }

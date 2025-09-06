@@ -1,6 +1,7 @@
 package com.axle.mapper;
 
 import com.axle.pojo.QuestionLib;
+import com.axle.vo.InitQuestionLibVO;
 import com.axle.vo.QuestionLibVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
@@ -18,4 +19,6 @@ import java.util.Map;
  */
 public interface QuestionLibCustomMapper  {
      List<QuestionLibVO> queryQuestionLibList(@Param("ParamMap") Map<String,Object> map);
+
+    InitQuestionLibVO queryRandomQuestion(@Param("ParamMap") Map<String,Object> map);
 }

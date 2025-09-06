@@ -4,6 +4,9 @@ import com.axle.bo.JobBO;
 import com.axle.pojo.Job;
 import com.axle.utils.PagedGridResult;
 
+import java.util.HashMap;
+import java.util.List;
+
 public interface JobService {
 
     void createOrUpdate(JobBO jobBO);

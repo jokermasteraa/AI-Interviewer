@@ -2,6 +2,7 @@ package com.axle.controller;
 
 import com.axle.bo.CandidateBO;
 import com.axle.graceresult.GraceJSONResult;
+import com.axle.pojo.QuestionLib;
 import com.axle.service.CandidateService;
 import com.axle.utils.PagedGridResult;
 import jakarta.annotation.Resource;
@@ -39,4 +40,5 @@ public class CandidateController {
         candidateService.deleteById(candidateId);
         return GraceJSONResult.ok();
     }
+
 }

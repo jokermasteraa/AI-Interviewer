@@ -23,4 +23,9 @@
         </if>
     </select>
 
+    <select id="queryRandomQuestion" parameterType="map" resultType="com.axle.vo.InitQuestionLibVO">
+        SELECT *
+        FROM question_lib WHERE is_on = 1 LIMIT #{ParamMap.randomIndex}, 1
+    </select>
+
 </mapper>

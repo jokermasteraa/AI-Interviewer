@@ -1,7 +1,9 @@
 package com.axle.service;
 
 import com.axle.bo.CandidateBO;
+import com.axle.graceresult.GraceJSONResult;
 import com.axle.pojo.Candidate;
+import com.axle.pojo.QuestionLib;
 import com.axle.utils.PagedGridResult;
 
 public interface CandidateService {
@@ -12,4 +14,7 @@ public interface CandidateService {
     Candidate getDetail(String candidateId);
 
     void deleteById(String candidateId);
+
+    Candidate queryByPhone(String mobile);
+
 }

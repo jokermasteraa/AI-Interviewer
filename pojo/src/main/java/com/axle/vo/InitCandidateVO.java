@@ -9,23 +9,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-/**
- * <p>
- * 应聘者表
- * </p>
- *
- * @author axle
- * @since 2025-08-29
- */
 @Data
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class CandidateVO  {
+public class InitCandidateVO {
 
     private String candidateId;
     private String realName;
@@ -33,8 +24,8 @@ public class CandidateVO  {
     private String mobile;
     private Integer sex;
     private String email;
+    @JsonSerialize(using = LocalDateSerializer.class)
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate birthday;
     private String jobId;
-    private String jobName;
-    private LocalDateTime createTime;
 }

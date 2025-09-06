@@ -2,6 +2,9 @@ package com.axle.service;
 
 import com.axle.bo.QuestionLibBO;
 import com.axle.utils.PagedGridResult;
+import com.axle.vo.InitQuestionLibVO;
+
+import java.util.List;
 
 public interface QuestionLibService {
     public void createOrUpdate(QuestionLibBO questionLibBO);
@@ -13,4 +16,6 @@ public interface QuestionLibService {
     void deleteById(String questionLibId);
 
     boolean isQustionContainInterviewer(String questionId);
+
+    List<InitQuestionLibVO> getRandomQuestions(String candidateId, Integer questionNum);
 }

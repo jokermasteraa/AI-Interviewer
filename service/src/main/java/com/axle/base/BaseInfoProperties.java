@@ -1,10 +1,12 @@
 package com.axle.base;
 
+import com.axle.utils.RedisOperator;
 import com.github.pagehelper.PageInfo;
 import com.axle.enums.JobTitle;
 import com.axle.utils.PagedGridResult;
 //import com.itzixi.utils.RedisOperator;
 //import com.axle.utils.RedisOperator;
+import jakarta.annotation.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
@@ -13,8 +15,8 @@ import java.util.List;
 
 public class BaseInfoProperties {
 
-//    @Resource
-//    public RedisOperator redis;
+    @Resource
+    public RedisOperator redis;
 
     public static final String DEFAULT_USER_FACE = "";
 
