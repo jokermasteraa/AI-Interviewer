@@ -6,6 +6,7 @@ import com.axle.graceresult.GraceJSONResult;
 import com.axle.graceresult.ResponseStatusEnum;
 import com.axle.pojo.Candidate;
 import com.axle.service.CandidateService;
+import com.axle.service.InterviewRecordService;
 import com.axle.vo.CandidateVO;
 import com.axle.vo.InitCandidateVO;
 import jakarta.annotation.Resource;
@@ -31,6 +32,9 @@ public class WelcomeController extends BaseInfoProperties {
 
     @Resource
     private CandidateService candidateService;
+
+    @Resource
+    private InterviewRecordService interviewRecordService;
 
     @PostMapping("/getSMSCode")
     public GraceJSONResult  getSMSCode(@RequestParam String mobile){
@@ -59,7 +63,12 @@ public class WelcomeController extends BaseInfoProperties {
         if(StringUtils.isBlank(candidate.getId())){
             //2.1不存在则代表没有该候选人
             return GraceJSONResult.errorCustom(ResponseStatusEnum.USER_INFO_NOT_EXIST_ERROR);
+        } else {
             //2.2存在则查看是否已经面试过了，如果已经面试过了就不能在面试了 TODO需要知道是否已经面试过
+            Boolean flag = interviewRecordService.selectcount(candidate.getId());
+            if(flag){
+                return GraceJSONResult.errorCustom(ResponseStatusEnum.USER_ALREADY_DID_INTERVIEW_ERROR);
+            }
         }
         //3.保存TOKEN信息到Redis中
         String userTOKEN = UUID.randomUUID().toString();

@@ -3,6 +3,7 @@ package com.axle.mapper;
 import com.axle.pojo.InterviewRecord;
 import com.axle.vo.InterviewRecordVO;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,7 @@ import java.util.Map;
  * @author axle
  * @since 2025-08-29
  */
-public interface InterviewRecordMapper extends BaseMapper<InterviewRecord> {
+public interface InterviewRecordMapperCustom extends BaseMapper<InterviewRecord> {
 
+    List<InterviewRecordVO> queryAllRecords(@Param("ParamMap") Map<String, Object> map);
 }
