@@ -15,8 +15,8 @@ import java.util.Map;
 @Slf4j
 public class GLMTokenUtils {
 
-    private static final String apiKey = "9b4e111a90b111111154a43222191";
-    private static final String apiSecret = "diWL222222ne22Bp";
+    private static final String apiKey = "995c63408c2a4e68a3babb45ad791ce6";
+    private static final String apiSecret = "qxYPob0p1oyhM1Zr";
 
     // 过期时间；默认30分钟
     private static final int expireMillis = 30 * 60 * 1000;

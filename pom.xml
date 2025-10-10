@@ -29,6 +29,8 @@
         <relativePath />
     </parent>
 
+
+
     <!--
 使用dependencyManagement目的是为了保证当前父工程干净，
 也就是说父工程只会负责对依赖（坐标）的管理，以及依赖版本的管理，不会引入额外的jar依赖
@@ -181,6 +183,40 @@
                 <artifactId>gson</artifactId>
                 <version>2.11.0</version>
             </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-amqp</artifactId>
+                <version>2.7.5</version>
+            </dependency>
+
+            <dependency>
+                <groupId>dev.langchain4j</groupId>
+                <artifactId>langchain4j-bom</artifactId>
+                <version>0.29.1</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+                <dependency>
+
+                    <groupId>com.microsoft.onnxruntime</groupId>
+                    <artifactId>onnxruntime</artifactId>
+                    <version>1.17.1</version>
+                </dependency>
+
+                <dependency>
+                    <groupId>ai.djl.huggingface</groupId>
+                    <artifactId>tokenizers</artifactId>
+                    <version>0.27.0</version>
+                </dependency>
+
         </dependencies>
     </dependencyManagement>
+
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+    </repositories>
 </project>
