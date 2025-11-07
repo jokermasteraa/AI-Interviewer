@@ -10,6 +10,8 @@ import com.axle.service.InterviewRecordService;
 import com.axle.service.JobService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 // ================ M2 版本的正确 Imports ================
 import org.springframework.ai.chat.model.ChatModel; // M2: 注入 ChatModel
 import org.springframework.ai.chat.prompt.Prompt;

@@ -51,17 +51,17 @@ public class MinIOUtils {
     public void createMinioClient() {
         try {
             if (null == minioClient) {
-                log.info("开始创建 MinioClient...");
+//                log.info("开始创建 MinioClient...");
                 minioClient = MinioClient
                                 .builder()
                                 .endpoint(endpoint)
                                 .credentials(accessKey, secretKey)
                                 .build();
                 createBucket(bucketName);
-                log.info("创建完毕 MinioClient...");
+//                log.info("创建完毕 MinioClient...");
             }
         } catch (Exception e) {
-            log.error("MinIO服务器异常：{}", e);
+//            log.error("MinIO服务器异常：{}", e);
         }
     }
 
@@ -409,7 +409,7 @@ public class MinIOUtils {
             try {
                 removeFile(bucketName, s);
             } catch (Exception e) {
-                log.error("批量删除失败！error:{}",e);
+//                log.error("批量删除失败！error:{}",e);
             }
         });
     }
