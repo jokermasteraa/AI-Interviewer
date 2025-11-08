@@ -15,41 +15,51 @@ spring:
       host: localhost
       port: 6379
       database: 1
-      password: 123456
+      #      password: 123456
+      client-type: jedis
+  # --- 智谱AI (ChatGLM) 配置 ---
+  ai:
+    zhipuai:
+      chat:
+        # 必须: 填入您的 ZhipuAI API Key
+        api-key: 995c63408c2a4e68a3babb45ad791ce6.qxYPob0p1oyhM1Zr
+        # 可选: 配置模型
+        options:
+          # 我们使用 GLM-4 Flash，与您之前的代码一致
+          model: glm-4-flash
+    vectorstore:
+      redis:
+        initialize-schema: true
+        index-name: "custom-index"
+        prefix: "custom-prefix:"
+  autoconfigure:
+    exclude:
+      - org.springframework.ai.model.zhipuai.autoconfigure.ZhiPuAiEmbeddingAutoConfiguration
+      - org.springframework.ai.model.zhipuai.autoconfigure.ZhiPuAiImageAutoConfiguration
+
   rabbitmq:
     host: 192.168.0.101
     port: 15674
     username: admin
     password: admin
     virtual-host: /AI
-  # ==================================
-  # = Spring AI 1.0.0 配置
-  # ==================================
-  ai:
-    # --- 智谱AI (ChatGLM) 配置 ---
-    zhipuai:
-      chat:
-        # 必须: 填入您的 ZhipuAI API Key
-        api-key: "995c63408c2a4e68a3babb45ad791ce6.qxYPob0p1oyhM1Zr"
-        # 可选: 配置模型
-        options:
-          # 我们使用 GLM-4 Flash，与您之前的代码一致
-          model: "glm-4-flash"
-          temperature: 0.9
-          top-p: 0.7
+    # ==================================
+    # = Spring AI 1.0.0 配置
+    # ==================================
+
+
+
+
+    # ... 您已有的 mybatis-plus, pagehelper, axle, minio, logging 配置 ...
     # --- 向量存储配置 (使用 Redis) ---
-    vectorstore:
-      redis:
-        enabled: true
-        # Redis 向量存储使用的索引名称
-        index: "ai-interviewer-rag"
-        # Redis 向量存储使用的 Key 的前缀
-        prefix: "ai-interviewer:"
-        # Spring AI 会自动使用顶层的 spring.data.redis 配置 (host, port, password)
-        # 所以您无需在这里重复配置连接信息
-
-# ... 您已有的 mybatis-plus, pagehelper, axle, minio, logging 配置 ...
-
+#      redis:
+#        initialize-schema: true
+#        # Redis 向量存储使用的索引名称
+#        index: ai-interviewer-rag
+#        # Redis 向量存储使用的 Key 的前缀
+#        prefix: ai-interviewer
+#        # Spring AI 会自动使用顶层的 spring.data.redis 配置 (host, port, password)
+#        # 所以您无需在这里重复配置连接信息
 # 注意:
 # 您在 application.yml 中已有的 spring.data.redis 配置会被自动用于 Redis 向量存储
 # spring.data.redis:
@@ -60,7 +70,8 @@ spring:
 #日志级别
 logging:
   level:
-    root: info
+    org.springframework.boot.autoconfigure: DEBUG
+#    root: info
 
 mybatis-plus:
   configuration:

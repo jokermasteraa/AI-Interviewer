@@ -145,7 +145,7 @@ public class EmbeddingService implements EmbeddingModel {
     // [FIX] 2. 实现 float[] embed(Document document)
     @Override
     public float[] embed(Document document) {
-        return embedTextInternal(document.getContent());
+        return embedTextInternal(document.getText());
     }
 
 

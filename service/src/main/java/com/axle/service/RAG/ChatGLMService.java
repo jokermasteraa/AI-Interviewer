@@ -10,14 +10,13 @@ import com.axle.service.InterviewRecordService;
 import com.axle.service.JobService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 // ================ M2 版本的正确 Imports ================
-import org.springframework.ai.chat.model.ChatModel; // M2: 注入 ChatModel
+import org.springframework.ai.chat.model.ChatModel; // 1.0.0: 注入 ChatModel
 import org.springframework.ai.chat.prompt.Prompt;
 // =======================================================
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.redis.RedisVectorStore;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +34,7 @@ public class  ChatGLMService {
     // --- 1. 注入 Spring AI M2 客户端 ---
     private final ChatModel chatModel;
     // M2 版本注入 ChatModel
+    @Autowired
     private final VectorStore vectorStore;
 
     // --- 2. 注入您现有的业务服务 ---
@@ -100,13 +100,15 @@ public class  ChatGLMService {
         // RAG 搜索
         String filterExpression = "candidateId == '" + candidateId + "' && jobId == '" + jobId + "'";
 
-        SearchRequest searchRequest = SearchRequest.query(conversation)
-                .withTopK(2)
-                .withFilterExpression(filterExpression);
+        SearchRequest searchRequest = SearchRequest.builder()
+                .query(conversation)
+                .topK(2)
+                .filterExpression(filterExpression)
+                .build();
 
         List<Document> contextDocs = vectorStore.similaritySearch(searchRequest);
         String retrievedContext = contextDocs.stream()
-                .map(Document::getContent)
+                .map(Document::getText)
                 .collect(Collectors.joining("\n- "));
 
         log.debug("【RAG】检索到的上下文: {}", retrievedContext);
@@ -116,7 +118,7 @@ public class  ChatGLMService {
         Prompt prompt = new Prompt(dynamicPrompt);
 
         // M2: 直接调用 chatModel.call
-        String rawJsonFromAI = chatModel.call(prompt).getResult().getOutput().getContent();
+        String rawJsonFromAI = chatModel.call(prompt).getResult().getOutput().getText();
 
         // --- 6. 保存结果 (此方法无需修改) ---
         saveAnalysisResult(submitAnswerBO, conversation, rawJsonFromAI);
