@@ -71,6 +71,10 @@ public class ChatGLMService {
         List<AnswerBO> questionAnswerList = submitAnswerBO.getQuestionAnswerList();
 
         for (AnswerBO answer : questionAnswerList) {
+            if (answer.getAnswerContent() == null || answer.getAnswerContent().trim().isEmpty()) {
+                log.warn("候选人未对问题 '{}' 提供回答，跳过评估", answer.getQuestion());
+                continue;
+            }
             String questionText = answer.getQuestion();
             String candidateAnswerText = answer.getAnswerContent();
 
@@ -92,7 +96,14 @@ public class ChatGLMService {
             String perQuestionPrompt = buildPerQuestionPrompt(questionText, candidateAnswerText, retrievedCriteria);
 
             // 1.3. 调用LLM获取单题评价 (非JSON，纯文本)
-            String perQuestionFeedback = chatModel.call(new Prompt(perQuestionPrompt)).getResult().getOutput().getText();
+            String perQuestionFeedback = "";
+            try {
+                perQuestionFeedback = chatModel.call(new Prompt(perQuestionPrompt)).getResult().getOutput().getText();
+            } catch (Exception e) {
+                log.warn("调用AI模型失败，重试一次: {}", e.getMessage());
+                // 重试一次
+                perQuestionFeedback = chatModel.call(new Prompt(perQuestionPrompt)).getResult().getOutput().getText();
+            }
 
             // 1.4. 汇总逐题评价
             perQuestionAnalysisReport.append("--- 问题：").append(questionText).append(" ---\n");

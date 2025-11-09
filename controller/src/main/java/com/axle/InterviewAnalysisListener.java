@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.time.Instant;
 
 @Component
 @Slf4j
@@ -22,7 +24,10 @@ public class InterviewAnalysisListener {
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_INTERVIEW)
     public void processInterviewAnalysis(Message message) {
-        log.info("【RabbitMQ消费者】接收到AI分析任务...");
+
+        Instant startTime = Instant.now();
+        log.info("【RabbitMQ消费者】接收到AI分析任务... 开始计时。");
+
         try {
             String messageBody = new String(message.getBody(), StandardCharsets.UTF_8);
             SubmitAnswerBO submitAnswerBO = JsonUtils.jsonToPojo(messageBody, SubmitAnswerBO.class);
@@ -37,6 +42,14 @@ public class InterviewAnalysisListener {
         } catch (Exception e) {
             log.error("【RabbitMQ消费者】处理AI分析任务时发生异常", e);
             // 可以在这里加入重试或死信队列逻辑
+        } finally {
+            Instant endTime = Instant.now();
+            Duration duration = Duration.between(startTime, endTime);
+
+            // 打印总耗时（包括了所有Java逻辑和AI调用）
+            log.info("【RabbitMQ消费者】任务处理完毕。总耗时: {} 秒 ({} 毫秒)",
+                    duration.toSeconds(),
+                    duration.toMillis());
         }
     }
 }

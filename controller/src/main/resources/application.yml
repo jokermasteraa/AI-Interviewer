@@ -22,11 +22,12 @@ spring:
     zhipuai:
       chat:
         # 必须: 填入您的 ZhipuAI API Key
-        api-key: 995c63408c2a4e68a3babb45ad791ce6.qxYPob0p1oyhM1Zr
+        api-key: 4d93e4a5d29d4c7baec0a4393d31d4db.pQMqDZzFmJGrlk6a
         # 可选: 配置模型
         options:
           # 我们使用 GLM-4 Flash，与您之前的代码一致
-          model: glm-4.5
+          model: glm-4.5-airx
+        
     vectorstore:
       redis:
         initialize-schema: true
