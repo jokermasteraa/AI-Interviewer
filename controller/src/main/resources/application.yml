@@ -46,18 +46,24 @@ spring:
     virtual-host: /AI
     listener:
       simple:
-        concurrency: 10
-        max-concurrency: 50
-        prefetch: 50
-    # ==================================
-    # = Spring AI 1.0.0 配置
-    # ==================================
+        # 【关键】禁用默认的"重新入队"
+        # false: 发生异常时，消息被拒绝(rejected)，从而进入DLQ
+        # true: (默认) 发生异常时，消息被重新放回原队列，导致无限重试
+        default-requeue-rejected: false
 
-
-
+        # 【推荐】配置您的消费者并发（如我们之前讨论的）
+        concurrency: 5
+        max-concurrency: 15
+        prefetch: 15
+        acknowledge-mode: manual
+    publisher-confirm-type: correlated
+    publisher-returns: true
+    template:
+      mandatory: true
 
     # ... 您已有的 mybatis-plus, pagehelper, axle, minio, logging 配置 ...
     # --- 向量存储配置 (使用 Redis) ---
+
 #      redis:
 #        initialize-schema: true
 #        # Redis 向量存储使用的索引名称
