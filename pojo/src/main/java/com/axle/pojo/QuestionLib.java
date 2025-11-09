@@ -30,6 +30,9 @@ public class QuestionLib implements Serializable {
      */
     private String referenceAnswer;
 
+
+    private String scoringCriteria;
+
     /**
      * 面试数字人对应的地址
      */
@@ -49,6 +52,16 @@ public class QuestionLib implements Serializable {
     private LocalDateTime createTime;
 
     private LocalDateTime updatedTime;
+
+
+
+    public void setScoringCriteria(String scoringCriteria) {
+        this.scoringCriteria = scoringCriteria;
+    }
+
+    public String getScoringCriteria() {
+        return scoringCriteria;
+    }
 
     public String getId() {
         return id;
@@ -70,9 +83,6 @@ public class QuestionLib implements Serializable {
         return referenceAnswer;
     }
 
-    public void setReferenceAnswer(String referenceAnswer) {
-        this.referenceAnswer = referenceAnswer;
-    }
 
     public String getAiSrc() {
         return aiSrc;
@@ -81,6 +91,8 @@ public class QuestionLib implements Serializable {
     public void setAiSrc(String aiSrc) {
         this.aiSrc = aiSrc;
     }
+
+
 
     public String getInterviewerId() {
         return interviewerId;
@@ -120,6 +132,7 @@ public class QuestionLib implements Serializable {
         "id = " + id +
         ", question = " + question +
         ", referenceAnswer = " + referenceAnswer +
+        ", scoringCriteria = " + scoringCriteria +
         ", aiSrc = " + aiSrc +
         ", interviewerId = " + interviewerId +
         ", isOn = " + isOn +
