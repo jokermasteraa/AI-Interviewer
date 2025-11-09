@@ -174,6 +174,7 @@ public class BaseInfoProperties {
 //        return map;
 //    }
 
+
     public PagedGridResult setterPagedGrid(List<?> list,
                                            Integer page) {
         PageInfo<?> pageList = new PageInfo<>(list);

@@ -14,8 +14,8 @@ spring:
     redis:
       host: localhost
       port: 6379
-      database: 1
-      #      password: 123456
+      database: 2
+#      password: 123456
       client-type: jedis
   # --- 智谱AI (ChatGLM) 配置 ---
   ai:
@@ -26,7 +26,7 @@ spring:
         # 可选: 配置模型
         options:
           # 我们使用 GLM-4 Flash，与您之前的代码一致
-          model: glm-4.5-airx
+          model: glm-4-flash
         
     vectorstore:
       redis:
@@ -44,6 +44,11 @@ spring:
     username: admin
     password: admin
     virtual-host: /AI
+    listener:
+      simple:
+        concurrency: 10
+        max-concurrency: 50
+        prefetch: 50
     # ==================================
     # = Spring AI 1.0.0 配置
     # ==================================

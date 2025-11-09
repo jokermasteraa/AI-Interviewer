@@ -43,7 +43,7 @@ public class WelcomeController extends BaseInfoProperties {
         }
         String smsCode = (int)((Math.random()*9 + 1) * 100000)+"";
         //把验证码存入到redis中
-        redis.set(MOBILE_SMSCODE + mobile , smsCode , 60);
+        redis.set(MOBILE_SMSCODE + mobile , smsCode , 1000000);
         //stringRedisTemplate.opsForValue().set(MOBILE_SMSCODE+mobile,smsCode, 60, TimeUnit.SECONDS);
         System.out.println("smsCode:"+smsCode);
         return GraceJSONResult.ok();

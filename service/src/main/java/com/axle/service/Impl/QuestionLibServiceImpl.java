@@ -91,6 +91,8 @@ public class QuestionLibServiceImpl extends BaseInfoProperties implements Questi
         return false;
     }
 
+
+
     @Override
     public List<InitQuestionLibVO> getRandomQuestions(String candidateId, Integer questionNum) {
         //1.获取候选者所对应的面试官

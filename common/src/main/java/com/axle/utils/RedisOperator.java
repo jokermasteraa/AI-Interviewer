@@ -224,6 +224,11 @@ public class RedisOperator {
 		return result;
 	}
 
+	public List<String> lrange(String key, long start, long end) {
+		return redisTemplate.opsForList().range(key, start, end);
+	}
+
+
 
 	// Hash（哈希表）
 
