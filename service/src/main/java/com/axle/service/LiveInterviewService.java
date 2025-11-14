@@ -1,6 +1,5 @@
 package com.axle.service;
 
-import com.axle.bo.NextQuestionResponse;
 import com.axle.vo.ai.InterviewEvaluation;
 
 public interface LiveInterviewService {
