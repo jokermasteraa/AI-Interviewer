@@ -22,12 +22,18 @@ spring:
     zhipuai:
       chat:
         # 必须: 填入您的 ZhipuAI API Key
-        api-key: 4d93e4a5d29d4c7baec0a4393d31d4db.pQMqDZzFmJGrlk6a
+        api-key: 9c4abd249a4e4a88960a6cefaba23f32.jbo8CSjOHc0OhMxZ
         # 可选: 配置模型
         options:
           # 我们使用 GLM-4 Flash，与您之前的代码一致
-          model: glm-4-flash
-        
+          model: glm-4.5-x
+    dashscope:
+      api-key: sk-d695e84730564a2299373e3c3be618c0
+      chat:
+        options:
+          model: qwen-plus-latest-plus
+      embedding:
+        enabled: false
     vectorstore:
       redis:
         initialize-schema: true
@@ -37,7 +43,8 @@ spring:
     exclude:
       - org.springframework.ai.model.zhipuai.autoconfigure.ZhiPuAiEmbeddingAutoConfiguration
       - org.springframework.ai.model.zhipuai.autoconfigure.ZhiPuAiImageAutoConfiguration
-
+      - com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeEmbeddingAutoConfiguration
+      -
   rabbitmq:
     host: 192.168.0.101
     port: 15674
@@ -50,11 +57,10 @@ spring:
         # false: 发生异常时，消息被拒绝(rejected)，从而进入DLQ
         # true: (默认) 发生异常时，消息被重新放回原队列，导致无限重试
         default-requeue-rejected: false
-
         # 【推荐】配置您的消费者并发（如我们之前讨论的）
-        concurrency: 5
-        max-concurrency: 15
-        prefetch: 15
+        concurrency: 100
+        max-concurrency: 200
+        prefetch: 200
         acknowledge-mode: manual
     publisher-confirm-type: correlated
     publisher-returns: true

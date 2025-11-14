@@ -41,7 +41,6 @@ public class RabbitMQConfig {
 
         return new Queue(QUEUE_INTERVIEW, true, false, false, args);
     }
-
     /**
      * 3. 主业务绑定
      */

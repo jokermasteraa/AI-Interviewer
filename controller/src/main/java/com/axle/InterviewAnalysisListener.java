@@ -41,6 +41,8 @@ public class InterviewAnalysisListener {
         String messageBody = null;
 
         try {
+
+
             messageBody = new String(message.getBody(), StandardCharsets.UTF_8);
             SubmitAnswerBO submitAnswerBO = JsonUtils.jsonToPojo(messageBody, SubmitAnswerBO.class);
 
@@ -51,10 +53,6 @@ public class InterviewAnalysisListener {
                 channel.basicAck(deliveryTag, false); // 确认消息，防止重复进入DLQ
                 return; // 结束处理
             }
-
-// 正常执行
-            chatGLMService.analyze(submitAnswerBO);
-            channel.basicAck(deliveryTag, false);
 
             if (submitAnswerBO != null) {
                 chatGLMService.analyze(submitAnswerBO);
