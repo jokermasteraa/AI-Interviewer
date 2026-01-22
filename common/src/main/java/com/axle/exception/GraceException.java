@@ -8,7 +8,7 @@ import com.axle.graceresult.ResponseStatusEnum;
 public class GraceException {
 
     public static void display(ResponseStatusEnum statusEnum) {
-        throw new exception.MyCustomException(statusEnum);
+        throw new MyCustomException(statusEnum);
     }
 
 }

@@ -25,6 +25,18 @@
             <artifactId>service</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
+        
+        <!-- Apache Commons IO - Tika依赖需要 -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        
+        <!-- Apache Commons Lang3 - Tika/commons-compress依赖需要 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

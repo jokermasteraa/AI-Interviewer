@@ -16,7 +16,7 @@ public class ZhipuAiConfig {
 
 
 
-    @Value("${spring.ai.zhipuai.chat.api-key}")
+    @Value("${spring.ai.zhipuai.api-key}")
     private String apiKey ;
 
 

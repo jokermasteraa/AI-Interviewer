@@ -1,4 +1,4 @@
-package exception;
+package com.axle.exception;
 
 import com.axle.graceresult.ResponseStatusEnum;
 

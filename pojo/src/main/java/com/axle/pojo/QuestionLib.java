@@ -83,6 +83,10 @@ public class QuestionLib implements Serializable {
         return referenceAnswer;
     }
 
+    public void setReferenceAnswer(String referenceAnswer) {
+        this.referenceAnswer = referenceAnswer;
+    }
+
 
     public String getAiSrc() {
         return aiSrc;

@@ -10,13 +10,14 @@
         <result column="answer_content" property="answerContent" />
         <result column="take_time" property="takeTime" />
         <result column="result" property="result" />
+        <result column="recommended_courses" property="recommendedCourses" />
         <result column="create_time" property="createTime" />
         <result column="updated_time" property="updatedTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, candidate_id, job_name, answer_content, take_time, result, create_time, updated_time
+        id, candidate_id, job_name, answer_content, take_time, result, recommended_courses, create_time, updated_time
     </sql>
 
 </mapper>

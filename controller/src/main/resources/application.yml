@@ -8,49 +8,56 @@ spring:
     active: dev   #dev开发环境 prod生产环境 test测试环境
   servlet:
     multipart:
-      max-file-size: 10MB    #文件上传的大小限制
-      max-request-size: 10MB   #文件最大请求限制，可用于批量上传
+      max-file-size: 20MB    #文件上传的大小限制（支持PDF和Word，适当增大）
+      max-request-size: 20MB   #文件最大请求限制，可用于批量上传
   data:
     redis:
       host: localhost
-      port: 6379
+      port: 7379
       database: 2
 #      password: 123456
       client-type: jedis
   # --- 智谱AI (ChatGLM) 配置 ---
   ai:
+    analysis: 500
     zhipuai:
+      api-key: f4f7dd3ad4764770af1a811966f79196.OeQ0WqfMTsF7t5Gx
       chat:
-        # 必须: 填入您的 ZhipuAI API Key
-        api-key: 9c4abd249a4e4a88960a6cefaba23f32.jbo8CSjOHc0OhMxZ
-        # 可选: 配置模型
         options:
-          # 我们使用 GLM-4 Flash，与您之前的代码一致
-          model: glm-4.5-x
+          model: GLM-4.5
+
+    #dashscope 配置已禁用，统一使用智谱AI
     dashscope:
-      api-key: sk-d695e84730564a2299373e3c3be618c0
+      api-key: sk-4c3dccedff144b1d96b3b2f4d79fa0fb
       chat:
-        options:
-          model: qwen-plus-latest-plus
+      options:
+      model: qwen-flash
       embedding:
-        enabled: false
+      enabled: false
     vectorstore:
+      # 使用Redis向量存储
       redis:
         initialize-schema: true
-        index-name: "custom-index"
-        prefix: "custom-prefix:"
+        # Redis 向量存储使用的索引名称
+        index-name: ai-interviewer-rag
+        # Redis 向量存储使用的 Key 的前缀
+        prefix: ai-interviewer
+        # Spring AI 会自动使用顶层的 spring.data.redis 配置 (host, port, password)
   autoconfigure:
     exclude:
-      - org.springframework.ai.model.zhipuai.autoconfigure.ZhiPuAiEmbeddingAutoConfiguration
       - org.springframework.ai.model.zhipuai.autoconfigure.ZhiPuAiImageAutoConfiguration
+      - org.springframework.ai.model.zhipuai.autoconfigure.ZhiPuAiEmbeddingAutoConfiguration
       - com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeEmbeddingAutoConfiguration
-      -
+      - com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeChatAutoConfiguration
+      - com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAgentAutoConfiguration
+      - com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAudioSpeechAutoConfiguration
+      - com.alibaba.cloud.ai.autoconfigure.dashscope.DashScopeAudioTranscriptionAutoConfiguration
   rabbitmq:
-    host: 192.168.0.101
-    port: 15674
+    host: localhost
+    port: 25672
     username: admin
-    password: admin
-    virtual-host: /AI
+    password: 123456
+    virtual-host: /
     listener:
       simple:
         # 【关键】禁用默认的"重新入队"
@@ -58,33 +65,15 @@ spring:
         # true: (默认) 发生异常时，消息被重新放回原队列，导致无限重试
         default-requeue-rejected: false
         # 【推荐】配置您的消费者并发（如我们之前讨论的）
-        concurrency: 100
-        max-concurrency: 200
-        prefetch: 200
+        concurrency: 300
+        max-concurrency: 400
+        prefetch: 1
         acknowledge-mode: manual
     publisher-confirm-type: correlated
     publisher-returns: true
     template:
       mandatory: true
 
-    # ... 您已有的 mybatis-plus, pagehelper, axle, minio, logging 配置 ...
-    # --- 向量存储配置 (使用 Redis) ---
-
-#      redis:
-#        initialize-schema: true
-#        # Redis 向量存储使用的索引名称
-#        index: ai-interviewer-rag
-#        # Redis 向量存储使用的 Key 的前缀
-#        prefix: ai-interviewer
-#        # Spring AI 会自动使用顶层的 spring.data.redis 配置 (host, port, password)
-#        # 所以您无需在这里重复配置连接信息
-# 注意:
-# 您在 application.yml 中已有的 spring.data.redis 配置会被自动用于 Redis 向量存储
-# spring.data.redis:
-#   host: localhost
-#   port: 6379
-#   database: 1
-#   password: 123456
 #日志级别
 logging:
   level:

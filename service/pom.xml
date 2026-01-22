@@ -20,6 +20,12 @@
         <!--用于处理业务逻辑的业务层
             -->
 
+        <!-- 显式依赖common模块，因为service使用了common的工具类 -->
+        <dependency>
+            <groupId>com.axle</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>com.axle</groupId>
@@ -31,6 +37,13 @@
         <dependency>
             <groupId>com.alibaba.cloud.ai</groupId>
             <artifactId>spring-ai-alibaba-starter-dashscope</artifactId>
+        </dependency>
+
+        <!-- DashScope SDK (语音识别等) -->
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>dashscope-sdk-java</artifactId>
+            <version>2.16.4</version>
         </dependency>
 
         <!-- 如果需要 onnxruntime 依赖，请完整添加 -->
@@ -47,10 +60,15 @@
             <version>0.27.0</version>
         </dependency>
 
+        <!-- Chroma 向量数据库 -->
+        <!-- 注意：如果Chroma配置不工作，可能需要手动配置VectorStore Bean -->
+        <!--
         <dependency>
             <groupId>org.springframework.ai</groupId>
-            <artifactId>spring-ai-starter-vector-store-redis</artifactId>
+            <artifactId>spring-ai-chroma-store-spring-boot-starter</artifactId>
+            <version>1.0.0</version>
         </dependency>
+        -->
 
         <dependency>
             <groupId>org.springframework.ai</groupId>
@@ -69,9 +87,48 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- WebFlux支持流式API -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+        </dependency>
 
+        <!-- Spring AI Tika Document Reader (ETL) - 包含PDF/Word解析 -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-tika-document-reader</artifactId>
+        </dependency>
 
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+
+        <!-- Redis 向量存储 -->
+        <dependency>
+            <groupId>org.springframework.ai</groupId>
+            <artifactId>spring-ai-starter-vector-store-redis</artifactId>
+        </dependency>
+
+        <!-- 测试依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
 
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>21</source>
+                    <target>21</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

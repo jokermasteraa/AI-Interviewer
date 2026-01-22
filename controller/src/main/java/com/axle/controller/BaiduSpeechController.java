@@ -28,7 +28,7 @@ import java.io.InputStream;
 import java.util.HashMap;
 
 @RestController
-@RequestMapping("speech")
+@RequestMapping("speech/baidu")  // 改为备用路径，主路径让给阿里云
 public class BaiduSpeechController {
 
     // https://console.bce.baidu.com/ai/?_=1654072308579&fromai=1#/ai/speech/app/list

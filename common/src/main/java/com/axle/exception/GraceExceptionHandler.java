@@ -24,9 +24,9 @@ public class GraceExceptionHandler {
         return GraceJSONResult.exception(ResponseStatusEnum.FILE_MAX_SIZE_500KB_ERROR);
     }
 
-    @ExceptionHandler(exception.MyCustomException.class)
+    @ExceptionHandler(MyCustomException.class)
     @ResponseBody
-    public GraceJSONResult returnMyCustomException(exception.MyCustomException e) {
+    public GraceJSONResult returnMyCustomException(MyCustomException e) {
         e.printStackTrace();
         return GraceJSONResult.exception(e.getResponseStatusEnum());
     }

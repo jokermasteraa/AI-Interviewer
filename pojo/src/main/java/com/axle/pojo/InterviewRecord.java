@@ -45,6 +45,11 @@ public class InterviewRecord implements Serializable {
      */
     private String result;
 
+    /**
+     * 推荐课程（异步生成）
+     */
+    private String recommendedCourses;
+
     private LocalDateTime createTime;
 
     private LocalDateTime updatedTime;
@@ -97,6 +102,14 @@ public class InterviewRecord implements Serializable {
         this.result = result;
     }
 
+    public String getRecommendedCourses() {
+        return recommendedCourses;
+    }
+
+    public void setRecommendedCourses(String recommendedCourses) {
+        this.recommendedCourses = recommendedCourses;
+    }
+
     public LocalDateTime getCreateTime() {
         return createTime;
     }
@@ -122,6 +135,7 @@ public class InterviewRecord implements Serializable {
         ", answerContent = " + answerContent +
         ", takeTime = " + takeTime +
         ", result = " + result +
+        ", recommendedCourses = " + recommendedCourses +
         ", createTime = " + createTime +
         ", updatedTime = " + updatedTime +
         "}";

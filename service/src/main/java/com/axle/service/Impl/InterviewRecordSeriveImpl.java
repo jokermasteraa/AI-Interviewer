@@ -51,4 +51,19 @@ public class InterviewRecordSeriveImpl extends BaseInfoProperties implements Int
         List<InterviewRecordVO> list = interviewRecordMapperCustom.queryAllRecords(map);
         return setterPagedGrid(list,page);
     }
+    
+    @Override
+    public InterviewRecord getLatestByCandidateId(String candidateId) {
+        List<InterviewRecord> records = interviewRecordMapper.selectList(
+                new QueryWrapper<InterviewRecord>()
+                        .eq("candidate_id", candidateId)
+                        .orderByDesc("create_time")
+                        .last("LIMIT 1"));
+        return records.isEmpty() ? null : records.get(0);
+    }
+    
+    @Override
+    public int updateById(InterviewRecord interviewRecord) {
+        return interviewRecordMapper.updateById(interviewRecord);
+    }
 }
