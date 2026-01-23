@@ -21,10 +21,10 @@ spring:
   ai:
     analysis: 500
     zhipuai:
-      api-key: f4f7dd3ad4764770af1a811966f79196.OeQ0WqfMTsF7t5Gx
+      api-key: a84d56254d2d4779a8d61c0f9856dfe4.X2HZFp5VVi56fuJ7
       chat:
         options:
-          model: GLM-4.5
+          model: GLM-4.5-air
 
     #dashscope 配置已禁用，统一使用智谱AI
     dashscope:
@@ -106,3 +106,14 @@ minio:
   bucketName: ai-interviewer # 你的MinIO存储桶名称
   accessKey: PxPjLOW41h5WYFPYvcU3 # MinIO的访问密钥
   secretKey: aPJCoRGW6cU8mqH1kAAbGz8UnspA4TPqW0v14yxi # MinIO的秘密密钥
+
+# Flowable工作流引擎配置
+flowable:
+  # 数据库配置（使用项目已有的数据库配置）
+  database-schema-update: true
+  # 禁用自动部署（我们手动部署BPMN文件）
+  check-process-definitions: true
+  # 异步执行器配置
+  async-executor-activate: true
+  # 历史记录级别：full表示记录所有历史
+  history-level: full

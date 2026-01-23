@@ -60,7 +60,8 @@ public class ChatGLMService {
     @Resource
     private TextProcessingService textProcessingService;
 
-    private PromptTemplate finalSummaryTemplate;
+    private PromptTemplate finalSummaryTemplate; // 简历模式模板
+    private PromptTemplate questionLibFinalSummaryTemplate; // 题库模式模板
     private PromptTemplate perQuestionTemplate;
     private PromptTemplate courseRecommendationTemplate;
 
@@ -77,8 +78,12 @@ public class ChatGLMService {
         log.info("【ChatGLMService】正在预加载 Prompt 模板...");
         org.springframework.core.io.Resource singleRes = resourceLoader.getResource("classpath:newprompts/singleanalysis.st");
         perQuestionTemplate = new PromptTemplate(singleRes);
+        // 简历模式模板
         org.springframework.core.io.Resource finalRes = resourceLoader.getResource("classpath:newprompts/finalanalysis.st");
         finalSummaryTemplate = new PromptTemplate(finalRes);
+        // 题库模式模板
+        org.springframework.core.io.Resource questionLibRes = resourceLoader.getResource("classpath:newprompts/questionlib-finalanalysis.st");
+        questionLibFinalSummaryTemplate = new PromptTemplate(questionLibRes);
         org.springframework.core.io.Resource courseRes = resourceLoader.getResource("classpath:newprompts/course-recommendation.st");
         courseRecommendationTemplate = new PromptTemplate(courseRes);
     }
@@ -146,25 +151,47 @@ public class ChatGLMService {
 
         log.info("【RAG 目标1】逐题评估完成。准备生成最终总结报告...");
 
-        // 2. 生成最终总结报告
-            Job job = jobService.getDetail(submitAnswerBO.getJobId());
-            Candidate candidate = candidateService.getDetail(submitAnswerBO.getCandidateId());
-            String jdContext = (job != null && job.getJobDesc() != null) ? job.getJobDesc() : "未提供职位描述。";
+        // 2. 生成最终总结报告（根据面试模式选择不同模板）
+        Integer interviewMode = submitAnswerBO.getInterviewMode();
+        if (interviewMode == null) {
+            interviewMode = 1; // 默认简历模式
+        }
+        
+        Job job = jobService.getDetail(submitAnswerBO.getJobId());
+        Candidate candidate = candidateService.getDetail(submitAnswerBO.getCandidateId());
+        String jdContext = (job != null && job.getJobDesc() != null) ? job.getJobDesc() : "未提供职位描述。";
         String resumeContext = resumeService.getResume(submitAnswerBO.getCandidateId());
         if (resumeContext == null && candidate != null && candidate.getRemark() != null) {
             resumeContext = candidate.getRemark();
         }
         if (resumeContext == null) resumeContext = "未提供简历信息。";
 
-            BeanOutputConverter<InterviewEvaluation> converter = new BeanOutputConverter<>(InterviewEvaluation.class);
-            Map<String, Object> variables = Map.of(
+        BeanOutputConverter<InterviewEvaluation> converter = new BeanOutputConverter<>(InterviewEvaluation.class);
+        PromptTemplate selectedTemplate;
+        Map<String, Object> variables;
+
+        // 根据模式选择模板和构建变量
+        if (interviewMode == 3) {
+            // 题库抽取模式：使用题库模式模板
+            selectedTemplate = questionLibFinalSummaryTemplate;
+            variables = Map.of(
+                "conversation", perQuestionAnalysisReport,
+                "format", converter.getFormat()
+            );
+            log.info("【RAG 目标1】使用题库模式模板");
+        } else {
+            // 简历模式（默认）：使用简历模式模板
+            selectedTemplate = finalSummaryTemplate;
+            variables = Map.of(
                 "jd_context", textProcessingService.truncateText(jdContext, 3000),
                 "resume_context", textProcessingService.truncateText(resumeContext, 3000),
                 "conversation", perQuestionAnalysisReport,
-                    "format", converter.getFormat()
+                "format", converter.getFormat()
             );
+            log.info("【RAG 目标1】使用简历模式模板");
+        }
 
-        String rawJsonFromAI = aiModelWrapper.callAiModel(qwenModel, finalSummaryTemplate.create(variables), "最终总结报告");
+        String rawJsonFromAI = aiModelWrapper.callAiModel(qwenModel, selectedTemplate.create(variables), "最终总结报告");
         log.info("【RAG 目标1】AI返回的原始JSON: {}", rawJsonFromAI);
         
         InterviewEvaluation evaluation = converter.convert(rawJsonFromAI);

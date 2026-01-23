@@ -338,18 +338,28 @@ public class ResumeService {
         }
         return false;
     }
-//
-//    public String processResumeText(String candidateId, String resumeText) {
-//        // 使用 Spring AI DocumentTransformer 进行文本清洗
-//        List<DocumentTransformer> transformers = textProcessingService.createResumeCleaningTransformers();
-//        String cleanedText = textProcessingService.cleanText(resumeText, transformers);
-//
-//        // 业务逻辑处理：白名单过滤
-//        cleanedText = filterValuableContent(cleanedText);
-//
-//        stringRedisTemplate.opsForValue().set(REDIS_RESUME_PREFIX + candidateId, cleanedText, RESUME_EXPIRE_HOURS, TimeUnit.HOURS);
-//        return "简历解析成功";
-//    }
+    /**
+     * 处理文本简历（APP平台使用）
+     * @param candidateId 候选人ID
+     * @param resumeText 简历文本内容
+     * @return 处理结果
+     */
+    public String processResumeText(String candidateId, String resumeText) {
+        log.info("【简历处理-文本】开始处理文本简历，候选人ID: {}", candidateId);
+        
+        // 使用 Spring AI DocumentTransformer 进行文本清洗
+        List<DocumentTransformer> transformers = textProcessingService.createResumeCleaningTransformers();
+        String cleanedText = textProcessingService.cleanText(resumeText, transformers);
+
+        // 业务逻辑处理：白名单过滤
+        cleanedText = filterValuableContent(cleanedText);
+
+        // 存储到 Redis
+        stringRedisTemplate.opsForValue().set(REDIS_RESUME_PREFIX + candidateId, cleanedText, RESUME_EXPIRE_HOURS, TimeUnit.HOURS);
+        
+        log.info("【简历处理-文本】简历处理成功，候选人ID: {}", candidateId);
+        return "简历解析成功";
+    }
 
     public String getResume(String candidateId) {
         return stringRedisTemplate.opsForValue().get(REDIS_RESUME_PREFIX + candidateId);

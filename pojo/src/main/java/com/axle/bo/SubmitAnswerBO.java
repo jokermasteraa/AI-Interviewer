@@ -17,4 +17,8 @@ public class SubmitAnswerBO {
     private String jobId;
     private List<AnswerBO> questionAnswerList;
     private Integer totalSeconds;
+    /**
+     * 面试模式：1-上传简历模式，3-题库抽取模式
+     */
+    private Integer interviewMode;
 }

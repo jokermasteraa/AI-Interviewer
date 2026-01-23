@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -19,8 +20,11 @@ public class RAGEvaluationService {
 
     private final VectorStore vectorStore;
 
-    public RAGEvaluationService(VectorStore vectorStore) {
+    public RAGEvaluationService(@Autowired(required = false) VectorStore vectorStore) {
         this.vectorStore = vectorStore;
+        if (vectorStore == null) {
+            log.warn("【RAGEvaluationService】VectorStore 未配置，RAG 评估功能将不可用。请确保 Redis 服务已启动并正确配置。");
+        }
     }
 
     /**
@@ -101,6 +105,17 @@ public class RAGEvaluationService {
      */
     public RAGEvaluationResult evaluate(List<TestCase> testCases, int topK) {
         log.info("【RAG评估】开始评估，测试用例数: {}, topK: {}", testCases.size(), topK);
+        
+        if (vectorStore == null) {
+            log.warn("【RAG评估】VectorStore 不可用，无法执行评估");
+            RAGEvaluationResult result = new RAGEvaluationResult();
+            result.setTotalQueries(testCases.size());
+            result.setHitRate(0.0);
+            result.setAveragePrecision(0.0);
+            result.setMrr(0.0);
+            result.setNdcg(0.0);
+            return result;
+        }
         
         int totalQueries = testCases.size();
         int hits = 0;  // 命中数（topK中包含至少一个相关文档）

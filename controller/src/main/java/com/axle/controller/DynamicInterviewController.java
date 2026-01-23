@@ -1,7 +1,7 @@
 package com.axle.controller;
 
 import com.axle.graceresult.GraceJSONResult;
-import com.axle.service.DynamicInterviewService;
+import com.axle.service.agent.ResumeBasedInterviewAgentService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.MediaType;
@@ -13,7 +13,7 @@ import java.io.IOException;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * 动态提问控制器
+ * 动态提问控制器（上传简历模式 - Agent自动化）
  * 仅支持SSE流式输出，移除冗余的同步接口
  */
 @RestController
@@ -22,7 +22,7 @@ import java.util.concurrent.CompletableFuture;
 public class DynamicInterviewController {
 
     @Resource
-    private DynamicInterviewService dynamicInterviewService;
+    private ResumeBasedInterviewAgentService resumeBasedInterviewAgentService;
 
     /**
      * 开始动态面试（生成第一题）- 真正的流式输出
@@ -47,11 +47,11 @@ public class DynamicInterviewController {
         CompletableFuture.runAsync(() -> {
             try {
                 log.info("【动态面试-流式】开始初始化上下文，候选人ID: {}, 职位ID: {}", candidateId, jobId);
-                // 初始化上下文
-                dynamicInterviewService.initInterviewContext(candidateId, jobId);
+                // 初始化上下文（Agent模式）
+                resumeBasedInterviewAgentService.initInterviewContext(candidateId, jobId);
                 log.info("【动态面试-流式】上下文初始化完成，开始生成问题");
                 // 流式生成第一题
-                dynamicInterviewService.generateQuestionStream(candidateId, null, null, emitter);
+                resumeBasedInterviewAgentService.generateQuestionStream(candidateId, null, emitter);
             } catch (Exception e) {
                 log.error("【动态面试-流式】处理失败，候选人ID: {}, 错误: {}", candidateId, e.getMessage(), e);
                 try {
@@ -69,10 +69,10 @@ public class DynamicInterviewController {
     /**
      * 获取下一题（根据上一题的答案）- 真正的流式输出
      */
-    @PostMapping(value = "/next", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/next", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public SseEmitter nextQuestion(@RequestParam("candidateId") String candidateId,
-                                   @RequestParam("lastQuestion") String lastQuestion,
-                                   @RequestParam("lastAnswer") String lastAnswer) {
+                                   @RequestParam(value = "lastQuestion", required = false) String lastQuestion,
+                                   @RequestParam(value = "lastAnswer", required = false) String lastAnswer) {
         log.info("【动态面试-流式】获取下一题，候选人ID: {}", candidateId);
 
         if (StringUtils.isBlank(candidateId)) {
@@ -87,10 +87,9 @@ public class DynamicInterviewController {
 
         CompletableFuture.runAsync(() -> {
             try {
-                dynamicInterviewService.generateQuestionStream(
+                resumeBasedInterviewAgentService.generateQuestionStream(
                     candidateId, 
                     lastAnswer != null ? lastAnswer : "", 
-                    lastQuestion != null ? lastQuestion : "",
                     emitter
                 );
             } catch (Exception e) {
@@ -111,8 +110,20 @@ public class DynamicInterviewController {
         if (StringUtils.isBlank(candidateId)) {
             return GraceJSONResult.errorMsg("候选人ID不能为空");
         }
-        dynamicInterviewService.clearInterviewContext(candidateId);
+        resumeBasedInterviewAgentService.clearInterviewContext(candidateId);
         return GraceJSONResult.ok("面试上下文已清理");
+    }
+
+    /**
+     * 获取当前状态
+     */
+    @GetMapping("/state")
+    public GraceJSONResult getCurrentState(@RequestParam("candidateId") String candidateId) {
+        if (StringUtils.isBlank(candidateId)) {
+            return GraceJSONResult.errorMsg("候选人ID不能为空");
+        }
+        String state = resumeBasedInterviewAgentService.getCurrentState(candidateId);
+        return GraceJSONResult.ok(state);
     }
 
     private void sendErrorMessage(SseEmitter emitter, String message) {

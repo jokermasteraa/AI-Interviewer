@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xmlns:flowable="http://flowable.org/bpmn"
+             typeLanguage="http://www.w3.org/2001/XMLSchema"
+             expressionLanguage="http://www.w3.org/1999/XPath"
+             targetNamespace="http://www.flowable.org/processdef">
+
+  <process id="interviewProcess" name="简历面试流程" isExecutable="true">
+    
+    <!-- 开始事件 -->
+    <startEvent id="startEvent" name="开始面试"/>
+    
+    <!-- 初始化任务：加载简历和JD，解析关键技术点 -->
+    <serviceTask id="initTask" name="初始化面试上下文" 
+                 flowable:delegateExpression="${initInterviewTask}"/>
+    
+    <!-- 生成问题任务：LLM生成面试问题 -->
+    <serviceTask id="generateQuestionTask" name="生成面试问题" 
+                 flowable:delegateExpression="${generateQuestionTask}"/>
+    
+    <!-- 接收任务：等待答案提交 -->
+    <receiveTask id="waitForAnswer" name="等待答案"/>
+    
+    <!-- 决策网关：LLM决策是否继续面试 -->
+    <exclusiveGateway id="decisionGateway" name="LLM决策：继续/结束？"/>
+    
+    <!-- 评估任务：生成评分和报告 -->
+    <serviceTask id="evaluateTask" name="评估并生成报告" 
+                 flowable:delegateExpression="${evaluateTask}"/>
+    
+    <!-- 结束事件 -->
+    <endEvent id="endEvent" name="面试结束"/>
+    
+    <!-- 流程连线 -->
+    <sequenceFlow id="flow1" sourceRef="startEvent" targetRef="initTask"/>
+    <sequenceFlow id="flow2" sourceRef="initTask" targetRef="generateQuestionTask"/>
+    <sequenceFlow id="flow3" sourceRef="generateQuestionTask" targetRef="waitForAnswer"/>
+    <sequenceFlow id="flow4" sourceRef="waitForAnswer" targetRef="decisionGateway"/>
+    
+    <!-- 决策分支：结束面试（优先判断） -->
+    <sequenceFlow id="flow6" name="结束面试" sourceRef="decisionGateway" targetRef="evaluateTask">
+      <conditionExpression xsi:type="tFormalExpression">
+        <![CDATA[${shouldEnd == true}]]>
+      </conditionExpression>
+    </sequenceFlow>
+    
+    <!-- 决策分支：继续面试（默认路径） -->
+    <sequenceFlow id="flow5" name="继续面试" sourceRef="decisionGateway" targetRef="generateQuestionTask">
+      <conditionExpression xsi:type="tFormalExpression">
+        <![CDATA[${shouldEnd != true}]]>
+      </conditionExpression>
+    </sequenceFlow>
+    
+    <!-- 结束流程 -->
+    <sequenceFlow id="flow7" sourceRef="evaluateTask" targetRef="endEvent"/>
+    
+  </process>
+</definitions>
